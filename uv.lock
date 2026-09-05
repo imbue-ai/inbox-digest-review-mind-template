@@ -35,6 +35,8 @@ members = [
     "host-backup",
     "mngr-cli-contract",
     "oom-priority",
+    "quick-view-projects",
+    "resource-monitor",
     "share-gateway",
     "system-interface",
     "tk-command-parsing",
@@ -2797,6 +2799,23 @@ wheels = [
 ]
 
 [[package]]
+name = "quick-view-projects"
+version = "0.1.0"
+source = { editable = "system/apps/quick_view_projects" }
+dependencies = [
+    { name = "flask" },
+    { name = "flask-sock" },
+    { name = "werkzeug" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "flask", specifier = ">=3.0" },
+    { name = "flask-sock", specifier = ">=0.7" },
+    { name = "werkzeug", specifier = ">=3.0" },
+]
+
+[[package]]
 name = "referencing"
 version = "0.37.0"
 source = { registry = "https://pypi.org/simple" }
@@ -2929,6 +2948,23 @@ requires-dist = [
     { name = "pytest", specifier = ">=9.0" },
 ]
 provides-extras = ["dev"]
+
+[[package]]
+name = "resource-monitor"
+version = "0.1.0"
+source = { editable = "system/apps/resource_monitor" }
+dependencies = [
+    { name = "flask" },
+    { name = "flask-sock" },
+    { name = "werkzeug" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "flask", specifier = ">=3.0" },
+    { name = "flask-sock", specifier = ">=0.7" },
+    { name = "werkzeug", specifier = ">=3.0" },
+]
 
 [[package]]
 name = "rich"
