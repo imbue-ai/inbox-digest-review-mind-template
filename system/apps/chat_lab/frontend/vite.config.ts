@@ -28,6 +28,11 @@ export default defineConfig({
     host: "127.0.0.1",
     port: 8080,
     strictPort: true,
+    // The tab is reached through the workspace forwarder at a per-workspace
+    // hostname (not "localhost"), which Vite's dev-server Host-header
+    // allowlist rejects by default. The forwarder already restricts what can
+    // reach this port, so trusting every Host here doesn't add exposure.
+    allowedHosts: true,
     // chat-lab has no backend of its own -- it forks the frontend only and
     // reuses the existing system_interface backend (agent discovery, message
     // send/receive, mngr-managed agent processes) running on :8000.
