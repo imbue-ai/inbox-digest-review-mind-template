@@ -16,8 +16,25 @@ function setSelectedAgentId(agentId: string): void {
   localStorage.setItem(SELECTED_AGENT_KEY, agentId);
 }
 
+/**
+ * External "open this chat" signals, for driving the view from outside the
+ * page -- a POC for window-change control. Two channels, both cheap because
+ * they just call the same `selectAgent` the sidebar's onclick calls:
+ *
+ * - `?agent=<id>` in the URL, read once on load. Fits this workspace's
+ *   existing "replace an iframe's URL" layout op (see manage-layout) --
+ *   another agent can point chat-lab's tab at a specific chat without any
+ *   new plumbing.
+ * - `postMessage({type: "chat-lab:select-agent", agentId})`, for a live
+ *   switch with no reload -- e.g. from a parent frame holding a reference to
+ *   this window. Not origin-restricted yet; tighten before this leaves POC.
+ */
+function getAgentIdFromUrl(): string | null {
+  return new URLSearchParams(window.location.search).get("agent");
+}
+
 export function App(): m.Component {
-  let selectedAgentId: string | null = getSelectedAgentId();
+  let selectedAgentId: string | null = getAgentIdFromUrl() ?? getSelectedAgentId();
 
   function selectAgent(agentId: string): void {
     selectedAgentId = agentId;
@@ -39,13 +56,22 @@ export function App(): m.Component {
     }
   };
 
+  const handleMessage = (event: MessageEvent): void => {
+    const data = event.data as { type?: unknown; agentId?: unknown };
+    if (data?.type === "chat-lab:select-agent" && typeof data.agentId === "string") {
+      selectAgent(data.agentId);
+    }
+  };
+
   return {
     oninit() {
       setAgentOpener(selectAgent);
       addAgentsUpdatedListener(handleAgentsUpdated);
+      window.addEventListener("message", handleMessage);
     },
     onremove() {
       removeAgentsUpdatedListener(handleAgentsUpdated);
+      window.removeEventListener("message", handleMessage);
     },
     view() {
       const agents = getAgents();
