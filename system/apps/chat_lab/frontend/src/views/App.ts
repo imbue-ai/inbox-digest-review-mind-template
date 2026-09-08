@@ -4,6 +4,7 @@ import type { AgentState } from "../models/AgentManager";
 import { ChatPanel } from "./ChatPanel";
 import { setAgentOpener } from "./dockview-shim";
 import { ShareUrl } from "./ShareUrl";
+import { connectControlChannel, setControlSelectAgentHandler } from "../models/ControlChannel";
 
 /** Which agent is showing, persisted per browser so a reload lands back on it. */
 const SELECTED_AGENT_KEY = "chat-lab.selected-agent-id";
@@ -18,7 +19,7 @@ function setSelectedAgentId(agentId: string): void {
 
 /**
  * External "open this chat" signals, for driving the view from outside the
- * page -- a POC for window-change control. Two channels, both cheap because
+ * page -- a POC for window-change control. Three channels, all cheap because
  * they just call the same `selectAgent` the sidebar's onclick calls:
  *
  * - `?agent=<id>` in the URL, read once on load. Fits this workspace's
@@ -28,6 +29,9 @@ function setSelectedAgentId(agentId: string): void {
  * - `postMessage({type: "chat-lab:select-agent", agentId})`, for a live
  *   switch with no reload -- e.g. from a parent frame holding a reference to
  *   this window. Not origin-restricted yet; tighten before this leaves POC.
+ * - The control-plane backend (ControlChannel.ts / chat_lab/runner.py): a
+ *   process anywhere on this machine can `POST /select-agent` and every open
+ *   chat-lab tab switches live, no browser-side access needed at all.
  */
 function getAgentIdFromUrl(): string | null {
   return new URLSearchParams(window.location.search).get("agent");
@@ -68,6 +72,8 @@ export function App(): m.Component {
       setAgentOpener(selectAgent);
       addAgentsUpdatedListener(handleAgentsUpdated);
       window.addEventListener("message", handleMessage);
+      setControlSelectAgentHandler(selectAgent);
+      connectControlChannel();
     },
     onremove() {
       removeAgentsUpdatedListener(handleAgentsUpdated);

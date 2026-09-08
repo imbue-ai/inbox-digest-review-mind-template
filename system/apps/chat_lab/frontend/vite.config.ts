@@ -33,13 +33,21 @@ export default defineConfig({
     // allowlist rejects by default. The forwarder already restricts what can
     // reach this port, so trusting every Host here doesn't add exposure.
     allowedHosts: true,
-    // chat-lab has no backend of its own -- it forks the frontend only and
-    // reuses the existing system_interface backend (agent discovery, message
-    // send/receive, mngr-managed agent processes) running on :8000.
     proxy: {
+      // Reuses the existing system_interface backend (agent discovery,
+      // message send/receive, mngr-managed agent processes) on :8000.
       "/api": {
         target: "http://localhost:8000",
         ws: true,
+      },
+      // chat-lab's own small control-plane backend (chat_lab/runner.py):
+      // lets a process on this machine tell every open tab which chat to
+      // show. Path is stripped since the backend serves /ws and
+      // /select-agent at its own root.
+      "/control": {
+        target: "http://localhost:8082",
+        ws: true,
+        rewrite: (path) => path.replace(/^\/control/, ""),
       },
     },
   },
