@@ -3,6 +3,7 @@ import { addAgentsUpdatedListener, getAgentById, getAgents, removeAgentsUpdatedL
 import type { AgentState } from "../models/AgentManager";
 import { ChatPanel } from "./ChatPanel";
 import { setAgentOpener } from "./dockview-shim";
+import { ShareUrl } from "./ShareUrl";
 
 /** Which agent is showing, persisted per browser so a reload lands back on it. */
 const SELECTED_AGENT_KEY = "chat-lab.selected-agent-id";
@@ -49,23 +50,28 @@ export function App(): m.Component {
     view() {
       const agents = getAgents();
       return m("div", { class: "chat-lab-layout flex h-screen" }, [
-        m("nav", { class: "chat-lab-sidebar flex w-64 shrink-0 flex-col overflow-y-auto border-r border-border" }, [
+        m("nav", { class: "chat-lab-sidebar flex w-64 shrink-0 flex-col border-r border-border" }, [
           m("div", { class: "chat-lab-sidebar-header px-3 py-3 text-sm font-semibold text-text-secondary" }, "Chats"),
-          agents.length === 0
-            ? m("div", { class: "px-3 py-2 text-sm text-text-secondary" }, "No agents found.")
-            : agents.map((agent: AgentState) =>
-                m(
-                  "button",
-                  {
-                    key: agent.id,
-                    class:
-                      "chat-lab-agent-row block w-full truncate px-3 py-2 text-left text-sm hover:bg-bg-hover" +
-                      (agent.id === selectedAgentId ? " bg-bg-hover font-medium" : ""),
-                    onclick: () => selectAgent(agent.id),
-                  },
-                  agent.display_name ?? agent.name,
+          m(
+            "div",
+            { class: "min-h-0 flex-1 overflow-y-auto" },
+            agents.length === 0
+              ? m("div", { class: "px-3 py-2 text-sm text-text-secondary" }, "No agents found.")
+              : agents.map((agent: AgentState) =>
+                  m(
+                    "button",
+                    {
+                      key: agent.id,
+                      class:
+                        "chat-lab-agent-row block w-full truncate px-3 py-2 text-left text-sm hover:bg-bg-hover" +
+                        (agent.id === selectedAgentId ? " bg-bg-hover font-medium" : ""),
+                      onclick: () => selectAgent(agent.id),
+                    },
+                    agent.display_name ?? agent.name,
+                  ),
                 ),
-              ),
+          ),
+          m(ShareUrl),
         ]),
         m(
           "main",
