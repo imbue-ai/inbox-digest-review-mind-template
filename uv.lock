@@ -29,6 +29,7 @@ members = [
     "bootstrap",
     "browser",
     "caretaker",
+    "chat-lab",
     "default-workspace-template",
     "env-converge",
     "github-sync",
@@ -609,6 +610,25 @@ wheels = [
 ]
 
 [[package]]
+name = "chat-lab"
+version = "0.1.0"
+source = { editable = "system/apps/chat_lab" }
+dependencies = [
+    { name = "flask" },
+    { name = "flask-sock" },
+    { name = "requests" },
+    { name = "werkzeug" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "flask", specifier = ">=3.0" },
+    { name = "flask-sock", specifier = ">=0.7" },
+    { name = "requests", specifier = ">=2.32" },
+    { name = "werkzeug", specifier = ">=3.0" },
+]
+
+[[package]]
 name = "click"
 version = "8.3.1"
 source = { registry = "https://pypi.org/simple" }
@@ -803,6 +823,7 @@ dependencies = [
     { name = "app-watcher" },
     { name = "bootstrap" },
     { name = "browser" },
+    { name = "chat-lab" },
     { name = "env-converge" },
     { name = "github-sync" },
     { name = "host-backup" },
@@ -838,6 +859,7 @@ requires-dist = [
     { name = "app-watcher", editable = "system/services/app_watcher" },
     { name = "bootstrap", editable = "system/libs/bootstrap" },
     { name = "browser", editable = "system/apps/browser" },
+    { name = "chat-lab", editable = "system/apps/chat_lab" },
     { name = "env-converge", editable = "system/services/env_converge" },
     { name = "github-sync", editable = "system/libs/github_sync" },
     { name = "host-backup", editable = "system/services/host_backup" },
