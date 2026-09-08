@@ -23,9 +23,15 @@ export function classifyDeviceKind(userAgentDataMobile: boolean | undefined, use
 }
 
 export function getDeviceKind(): DeviceKind {
-  // navigator.userAgentData is Chromium-only, hence the UA-string fallback.
-  const uaData = (navigator as { userAgentData?: { mobile?: boolean } }).userAgentData;
-  return classifyDeviceKind(uaData?.mobile, navigator.userAgent);
+  // Fork-only override: this build always reports "mobile" regardless of the
+  // real UA, purely to claim the backend's other device-kind storage slot
+  // (projects/<id>.mobile.json) instead of "desktop" -- which the real
+  // system_interface (sharing this same backend) also writes to. The backend
+  // only recognizes "desktop"/"mobile"; there is no third slot without a
+  // backend change. This is a deliberate collision risk against an actual
+  // mobile client of the real interface, accepted because none is in regular
+  // use here; see system/apps/system-interface-alt/README.md.
+  return "mobile";
 }
 
 let cachedClientId: string | null = null;
