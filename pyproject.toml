@@ -70,9 +70,11 @@ package = false
 # this list. The terminal app is excluded: it is a shell-script wrapper around
 # the vendored mngr_ttyd plugin, not a Python package. The files app likewise:
 # it is the pinned dufs binary (see system/scripts/install_dufs.sh) plus its
-# registered icon, with no Python of its own.
+# registered icon, with no Python of its own. system-interface-alt is a pure
+# frontend fork of system_interface's frontend (served by its own Vite dev
+# server, proxying to the real backend) with no Python of its own either.
 members = ["system/libs/*", "system/services/*", "system/apps/*"]
-exclude = ["system/apps/terminal", "system/apps/files"]
+exclude = ["system/apps/terminal", "system/apps/files", "system/apps/system-interface-alt"]
 
 [tool.uv.sources]
 bootstrap = { workspace = true }
