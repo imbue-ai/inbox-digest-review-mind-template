@@ -1836,9 +1836,23 @@ def _bucket_view(data: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def load_digest() -> dict[str, Any]:
+    """The classifier's latest output, or an empty digest when it has never run.
+
+    data.json does not exist until the email-digest skill runs for the first
+    time, so on a freshly adopted workspace a missing file is the normal empty
+    state rather than an error -- and the page has to render before then.
+    ``_bucket_view`` reads ``messages`` with a default, so an empty dict
+    renders every bucket empty.
+    """
+    if not DATA_PATH.exists():
+        return {}
+    return json.loads(DATA_PATH.read_text())
+
+
 @app.get("/", response_class=HTMLResponse)
 def index() -> HTMLResponse:
-    v = _bucket_view(json.loads(DATA_PATH.read_text()))
+    v = _bucket_view(load_digest())
     return HTMLResponse(PAGE.format(
         css=CSS, js=JS, prefix=ROOT_PATH,
         today=datetime.now().strftime("%a %d %b %Y"),
@@ -1852,7 +1866,7 @@ def api_buckets() -> JSONResponse:
     """Re-render the bucket section + summary numbers from the current
     data.json so the client can refresh the inbox in place (and FLIP-animate
     the judge's re-bucketing) without a full page reload."""
-    return JSONResponse(_bucket_view(json.loads(DATA_PATH.read_text())))
+    return JSONResponse(_bucket_view(load_digest()))
 
 
 # ---- Action endpoints ----

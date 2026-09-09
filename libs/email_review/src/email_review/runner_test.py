@@ -84,6 +84,22 @@ class TestIndex:
         response = client.get("/")
         assert response.status_code == 200
 
+    def test_renders_before_the_classifier_has_ever_run(self, tmp_path, monkeypatch):
+        # data.json does not exist until the email-digest skill runs once, so
+        # every freshly adopted workspace hits this state first. The page must
+        # render the empty digest rather than 500 on the missing file.
+        monkeypatch.setattr(runner, "DATA_PATH", tmp_path / "does_not_exist.json")
+        client = TestClient(runner.app)
+        response = client.get("/")
+        assert response.status_code == 200, response.text
+
+    def test_bucket_fragment_before_the_classifier_has_ever_run(self, tmp_path, monkeypatch):
+        monkeypatch.setattr(runner, "DATA_PATH", tmp_path / "does_not_exist.json")
+        client = TestClient(runner.app)
+        response = client.get("/api/buckets")
+        assert response.status_code == 200, response.text
+        assert response.json()["total_msgs"] == 0
+
     def test_handles_messages_with_mixed_date_formats(
         self, tmp_path, monkeypatch, make_message
     ):
