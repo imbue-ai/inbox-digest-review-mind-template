@@ -8,11 +8,33 @@ This is **not** a second workspace: it talks to the exact same running
 `http://localhost:8000`. Only the frontend code is forked -- edits here have
 no effect on the real workspace UI, and vice versa.
 
-It runs as Vite's own dev server (hot reload on save), not a built bundle:
-see `[program:system-interface-alt]` in `system/supervisord.conf`. `/api/*`
+It runs as **`vite preview`** serving a built bundle (a handful of hashed
+files), not `vite dev`'s live source-module server -- see
+`[program:system-interface-alt]` in `system/supervisord.conf`. `/api/*`
 (including the `/api/ws` WebSocket) is proxied to the real backend by Vite's
-dev-server proxy (`frontend/vite.config.ts`); nothing else talks to it
-directly.
+proxy (`frontend/vite.config.ts`, both `server.proxy` and `preview.proxy`);
+nothing else talks to it directly.
+
+**Why not `vite dev`, given the whole point is to hack on it live:** dev mode
+loads the app as ~150 individual on-demand module requests instead of a few
+bundled files. That's invisible to a normal browser tab, but the minds
+desktop app's local tunnel (`<label>.<agent-id>.localhost:8421`, separate
+infrastructure from this container) 503'd partway through under that many
+requests -- confirmed the dev server itself wasn't the bottleneck (it handled
+150 concurrent requests directly with no trouble), so the fix was fewer
+requests, not a faster server. The tradeoff: no hot reload. After editing
+`frontend/src`, rebuild and restart to see it:
+
+```bash
+cd system/apps/system-interface-alt/frontend
+npm run build
+supervisorctl restart system-interface-alt
+```
+
+If you're editing from *inside* this container (not checking it through the
+desktop app), swap the supervisord command back to `npm run dev` for hot
+reload -- see the comment above `[program:system-interface-alt]` in
+`system/supervisord.conf`.
 
 Because there is no backend of its own rendering `index.html`, none of the
 `<meta name="system-interface-*">` tags the real backend injects (base path,
@@ -31,7 +53,10 @@ is no automated sync.
 
 ```bash
 cd system/apps/system-interface-alt/frontend
-npm run dev   # already running under supervisord as system-interface-alt
+npm run build && supervisorctl restart system-interface-alt
 ```
 
-Edits under `frontend/src` hot-reload immediately in the open tab.
+For hot reload while iterating from inside this container, run `npm run dev`
+directly (a second, throwaway `vite` process on a different port) rather than
+switching the supervised one -- that keeps the desktop-app-safe build serving
+the registered tab throughout.

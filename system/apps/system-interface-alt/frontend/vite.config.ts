@@ -64,4 +64,23 @@ export default defineConfig({
       },
     },
   },
+  // Mirrors `server` above so `npm run preview` (serving the built bundle --
+  // a handful of hashed files instead of dev mode's ~150 individual on-demand
+  // module requests) is a drop-in swap for `npm run dev` when something
+  // downstream can't handle that many requests, e.g. the minds desktop app's
+  // local tunnel (observed 503s there; the raw dev server had no trouble with
+  // the same volume hit directly, pointing at the tunnel rather than this
+  // server -- see system-interface-alt/README.md).
+  preview: {
+    host: "127.0.0.1",
+    port: 8095,
+    strictPort: true,
+    allowedHosts: true,
+    proxy: {
+      "/api": {
+        target: "http://localhost:8000",
+        ws: true,
+      },
+    },
+  },
 });
