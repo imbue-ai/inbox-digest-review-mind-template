@@ -1,0 +1,41 @@
+# contacts.txt — the "who's who" allowlist the email-digest classifier reads
+# on every run. THIS IS AN EXAMPLE FILE. Every entry below is fake — replace
+# them with your own people, vendors, and subscriptions.
+#
+# Format: one entry per line, TAB-separated, four columns:
+#
+#   email-or-domain <TAB> name <TAB> category <TAB> notes
+#
+# - The first column is a full email (jane@acme.example) OR a bare domain
+#   (acme.example, which matches every address on that domain). A single entry
+#   may list several comma-separated addresses for the same person.
+# - Lines starting with "#" and blank lines are ignored.
+#
+# Categories and what they do:
+#   keep-subscribed   never auto-unsubscribe this sender (smart-action archives
+#                     instead). This is the allowlist that protects mailing
+#                     lists you want to stay on.
+#   trusted-warm      a real relationship — always shown, never treated as cold
+#                     outreach, phishing, or marketing.
+#   personal-service  a coach/therapist/scheduler etc. — treated warm, labeled
+#                     separately from trusted-warm.
+#   journalist        a press contact — treated warm; tracked as its own group.
+#   broker            someone who introduces people to you (drives the
+#                     warm-by-broker routing on brokered threads).
+#   vendor            a vendor/accounting domain — invoice/payment mail routes
+#                     to the "Work FYI" bucket; their personal mail still
+#                     reaches you.
+#   contractor        a contractor on a personal address — their invoices route
+#                     to "Work FYI".
+#   org-fyi           a pure-automation administrator (e.g. a 401k provider) —
+#                     ALL of their mail routes to "Work FYI".
+
+# ---- examples (delete these and add your own) ----
+newsletter@dailybrief.example	The Daily Brief	keep-subscribed	a newsletter you want to stay on
+sam.friend@personal.example	Sam Rivers	trusted-warm	old friend, personal address
+coach@wellness.example	Wellness Coaching	personal-service	scheduling + session reminders
+jordan@press.example	Jordan Lee	journalist	reporter you talk to
+robin@intros.example	Robin Introductions	broker	makes intros on your behalf
+acme-accounting.example	Acme Accounting	vendor	your bookkeeping vendor (invoices)
+casey.contractor@gmail.example	Casey Contractor	contractor	freelancer, invoices via personal email
+retirement-provider.example	Retirement Provider	org-fyi	401k administrator — statements only

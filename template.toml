@@ -1,0 +1,97 @@
+# Machine-readable manifest for this template. The sibling
+# template.md holds the prose, the Requirements list, and the two
+# append-only history logs; this file is authoritative for everything
+# below. Both are generated together -- validate_template.py fails if
+# they disagree.
+format = "v2"
+
+[template]
+slug = "inbox-digest-review"
+title = "Inbox Digest & Review"
+description = "A Gmail inbox digest and one-click triage app: a skill classifies recent mail into a 10-bucket taxonomy, and a web view lets you read and clear each item (archive / spam / unsubscribe / mute)."
+thumbnail = "template.svg"
+version = "v1"
+
+# How this template is DERIVED from the workspace it came from. An
+# update re-runs this recipe rather than diffing two repos, which is what
+# keeps an exclusion excluded even though the thing still exists upstream.
+[recipe]
+include = ["system/apps/email_review", ".agents/skills/email-digest", "system/scripts/review_email_moves.py", "pyproject.toml", "system/supervisord.conf", "uv.lock"]
+data_include = []
+# FILL IN: one entry per deliberate exclusion (paths left out, and
+# features stripped from an included path). Leave [] if nothing was.
+exclude = []
+# FILL IN: one entry per published-version modification, stated as a RULE
+# and NEVER the removed value -- the point of a modification is that the
+# value does not ship. e.g. "replace the hardcoded team channel with a
+# neutral default". Leave [] if there were none.
+modification_rules = []
+
+# Everything an adopter must deal with before this is really theirs.
+# One list -- but each entry's KIND says how it is handled, because the
+# two are handled at different times by different mechanisms:
+#
+#   permission / secret / llm = ACTIVATION. The adopting agent acts on
+#   these FIRST and BY ITSELF, initiating each latchkey permission
+#   request before asking the user anything. Every one of them must have
+#   a matching requires_ line in template.md and vice versa -- the
+#   validator checks that, because an adopter once never got prompted
+#   for a permission the app needed.
+#
+#   adaptation = worked through INTERACTIVELY with the user afterwards.
+#   Prose on both sides, so it is not cross-checked.
+#
+[requirements]
+
+[[requirements.permission]]
+scope = "google-gmail-api"
+permission = "google-gmail-read-all"
+
+[[requirements.permission]]
+scope = "google-gmail-api"
+permission = "google-gmail-write-all"
+
+[requirements.llm]
+method = "keyless"
+
+[[requirements.adaptation]]
+summary = "account.py ships placeholder identity (name, addresses, org domain)"
+resolution = "set the adopter's real identity before the first run"
+
+[[requirements.adaptation]]
+summary = "contacts.txt ships example rows only"
+resolution = "populate with the adopter's own who's-who, e.g. via contact_audit.py --write"
+
+[[requirements.adaptation]]
+summary = "RULES.md encodes one opinionated 10-bucket taxonomy"
+resolution = "rename/add buckets or tune the cold-outreach heuristics to match how the adopter works"
+
+[[requirements.adaptation]]
+summary = "reply-compose is intentionally not implemented (read-and-triage only)"
+resolution = "would be new work, not a stub -- add plain Gmail drafts if desired"
+
+[[requirements.adaptation]]
+summary = "the mute action's Gmail label name (\"Muted\") is hardcoded"
+resolution = "rename it in gmail_actions.py first if the adopter already uses that label name for something else"
+
+# What the included code needs INSTALLED. apt takes bare names: versions
+# are a function of the apt snapshot timestamp, so replaying names at the
+# adopter's timestamp yields versions consistent with the rest of their
+# environment. The other sources are not snapshot-pinned, so for them the
+# recorded version IS the pin (name = version).
+#
+# FILL IN from what the included code actually needs, e.g.:
+#   apt = ["poppler-utils"]
+#   [environment.npm_global]
+#   "@slack/cli" = "2.1.0"
+#   [environment.uv_tools]
+#   yt-dlp = "2026.7.1"
+#   [environment.cargo_crates]
+#   fd-find = "9.0.0"
+#
+# For an install with no package database (a URL-fetched binary, a browser),
+# ship a system/scripts/env.d/<NNNN>-<slug>-<name>.sh unit with NNNN >= 2000,
+# include it in the recipe above, and list it in env_d_units.
+[environment]
+apt = []
+env_d_units = []

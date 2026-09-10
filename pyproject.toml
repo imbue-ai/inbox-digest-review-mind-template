@@ -17,6 +17,7 @@ dependencies = [
     "litellm>=1.88.1",
     "browser",
     "chat-lab",
+    "email-review",
 ]
 
 [dependency-groups]
@@ -98,6 +99,7 @@ imbue-mngr-antigravity = { path = "system/vendor/mngr/libs/mngr_antigravity", ed
 resource-guards = { path = "system/vendor/mngr/libs/resource_guards", editable = true }
 concurrency-group = { path = "system/vendor/mngr/libs/concurrency_group", editable = true }
 chat-lab = {workspace = true}
+email-review = { workspace = true }
 
 [tool.pytest.ini_options]
 testpaths = ["."]
