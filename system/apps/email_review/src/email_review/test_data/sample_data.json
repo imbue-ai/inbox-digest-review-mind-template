@@ -1,0 +1,302 @@
+{
+  "stats": {
+    "total": 16,
+    "requested": 100,
+    "offset": 0
+  },
+  "messages": [
+    {
+      "id": "m000",
+      "threadId": "t000",
+      "labels": [
+        "INBOX"
+      ],
+      "from": "Dana Cole <dana@partners.example>",
+      "from_addr": "dana@partners.example",
+      "to": "you@yourcompany.example",
+      "cc": "",
+      "subject": "Quick question on the roadmap",
+      "date": "Thu, 15 May 2026 12:00:00 +0000",
+      "snippet": "This is a sample snippet for quick question on the roadmap.",
+      "cold_check": "warm (prior outbound)",
+      "final_bucket": "1",
+      "final_why": "example routing into Reply needed",
+      "synthesis": "Dana Cole \u2014 Quick question on the roadmap"
+    },
+    {
+      "id": "m001",
+      "threadId": "t001",
+      "labels": [
+        "INBOX",
+        "UNREAD"
+      ],
+      "from": "Morgan Reyes <morgan@ventures.example>",
+      "from_addr": "morgan@ventures.example",
+      "to": "you@yourcompany.example",
+      "cc": "",
+      "subject": "Save the date: offsite in October",
+      "date": "Thu, 15 May 2026 13:30:00",
+      "snippet": "This is a sample snippet for save the date: offsite in october.",
+      "cold_check": "warm (prior outbound)",
+      "final_bucket": "2",
+      "final_why": "example routing into Decision needed",
+      "synthesis": "Morgan Reyes \u2014 Save the date: offsite in October"
+    },
+    {
+      "id": "m002",
+      "threadId": "t002",
+      "labels": [
+        "INBOX"
+      ],
+      "from": "Priya Nair <priya@studio.example>",
+      "from_addr": "priya@studio.example",
+      "to": "you@yourcompany.example",
+      "cc": "",
+      "subject": "Looping you in on the vendor thread",
+      "date": "",
+      "snippet": "This is a sample snippet for looping you in on the vendor thread.",
+      "cold_check": "warm (prior outbound)",
+      "final_bucket": "3",
+      "final_why": "example routing into FYI / read",
+      "synthesis": "Priya Nair \u2014 Looping you in on the vendor thread"
+    },
+    {
+      "id": "m003",
+      "threadId": "t003",
+      "labels": [
+        "INBOX",
+        "UNREAD"
+      ],
+      "from": "Lee Park <lee@labs.example>",
+      "from_addr": "lee@labs.example",
+      "to": "you@yourcompany.example",
+      "cc": "",
+      "subject": "Please review the draft policy",
+      "date": "Wed, 14 May 2026 09:15:00 +0000",
+      "snippet": "This is a sample snippet for please review the draft policy.",
+      "cold_check": "warm (prior outbound)",
+      "final_bucket": "4",
+      "final_why": "example routing into TODO",
+      "synthesis": "Lee Park \u2014 Please review the draft policy"
+    },
+    {
+      "id": "m004",
+      "threadId": "t004",
+      "labels": [
+        "INBOX"
+      ],
+      "from": "Robin Introductions <robin@intros.example>",
+      "from_addr": "robin@intros.example",
+      "to": "you@yourcompany.example",
+      "cc": "",
+      "subject": "Re: proposal follow-up",
+      "date": "Tue, 13 May 2026 18:45:00 -0700",
+      "snippet": "This is a sample snippet for re: proposal follow-up.",
+      "cold_check": "warm (prior outbound)",
+      "final_bucket": "5",
+      "final_why": "example routing into Sent / awaiting reply",
+      "synthesis": "Robin Introductions \u2014 Re: proposal follow-up"
+    },
+    {
+      "id": "m005",
+      "threadId": "t005",
+      "labels": [
+        "INBOX",
+        "UNREAD"
+      ],
+      "from": "Cold Sender <outreach@coldpitch.example>",
+      "from_addr": "outreach@coldpitch.example",
+      "to": "you@yourcompany.example",
+      "cc": "",
+      "subject": "Intro: meet a founder building in your space",
+      "date": "Thu, 15 May 2026 12:00:00 +0000",
+      "snippet": "This is a sample snippet for intro: meet a founder building in your space.",
+      "cold_check": "skipped (automation/internal)",
+      "final_bucket": "6",
+      "final_why": "example routing into Cold outreach + event invites",
+      "synthesis": "Cold Sender \u2014 Intro: meet a founder building in your space"
+    },
+    {
+      "id": "m006",
+      "threadId": "t006",
+      "labels": [
+        "INBOX"
+      ],
+      "from": "Promo Bot <deals@marketing.example>",
+      "from_addr": "deals@marketing.example",
+      "to": "you@yourcompany.example",
+      "cc": "",
+      "subject": "50% off this week only",
+      "date": "Thu, 15 May 2026 13:30:00",
+      "snippet": "This is a sample snippet for 50% off this week only.",
+      "cold_check": "skipped (automation/internal)",
+      "final_bucket": "7",
+      "final_why": "example routing into Marketing / spam / phishing",
+      "synthesis": "Promo Bot \u2014 50% off this week only"
+    },
+    {
+      "id": "m007",
+      "threadId": "t007",
+      "labels": [
+        "INBOX",
+        "UNREAD"
+      ],
+      "from": "Linear <noreply@linear.app>",
+      "from_addr": "noreply@linear.app",
+      "to": "you@yourcompany.example",
+      "cc": "",
+      "subject": "New comment on your document",
+      "date": "",
+      "snippet": "This is a sample snippet for new comment on your document.",
+      "cold_check": "skipped (automation/internal)",
+      "final_bucket": "8",
+      "final_why": "example routing into In-product notifications",
+      "synthesis": "Linear \u2014 New comment on your document"
+    },
+    {
+      "id": "m008",
+      "threadId": "t008",
+      "labels": [
+        "INBOX"
+      ],
+      "from": "The Bulletin <hello@thebulletin.example>",
+      "from_addr": "hello@thebulletin.example",
+      "to": "you@yourcompany.example",
+      "cc": "",
+      "subject": "This week in tech",
+      "date": "Wed, 14 May 2026 09:15:00 +0000",
+      "snippet": "This is a sample snippet for this week in tech.",
+      "cold_check": "skipped (automation/internal)",
+      "final_bucket": "9",
+      "final_why": "example routing into Reading",
+      "synthesis": "The Bulletin \u2014 This week in tech"
+    },
+    {
+      "id": "m009",
+      "threadId": "t009",
+      "labels": [
+        "INBOX",
+        "UNREAD"
+      ],
+      "from": "Retirement Provider <info@retirement-provider.example>",
+      "from_addr": "info@retirement-provider.example",
+      "to": "you@yourcompany.example",
+      "cc": "",
+      "subject": "Q3 contribution report",
+      "date": "Tue, 13 May 2026 18:45:00 -0700",
+      "snippet": "This is a sample snippet for q3 contribution report.",
+      "cold_check": "skipped (automation/internal)",
+      "final_bucket": "10",
+      "final_why": "example routing into Work FYI",
+      "synthesis": "Retirement Provider \u2014 Q3 contribution report"
+    },
+    {
+      "id": "x000",
+      "threadId": "t000",
+      "labels": [
+        "INBOX"
+      ],
+      "from": "Dana Cole <dana@partners.example>",
+      "from_addr": "dana@partners.example",
+      "to": "you@yourcompany.example",
+      "cc": "",
+      "subject": "Re: roadmap \u2014 one more thought",
+      "date": "Thu, 15 May 2026 12:00:00 +0000",
+      "snippet": "Sample snippet for re: roadmap \u2014 one more thought.",
+      "cold_check": "warm (prior outbound)",
+      "final_bucket": "1",
+      "final_why": "example routing into Reply needed",
+      "synthesis": "Dana Cole \u2014 Re: roadmap \u2014 one more thought"
+    },
+    {
+      "id": "x001",
+      "threadId": "t101",
+      "labels": [
+        "INBOX"
+      ],
+      "from": "Morgan Reyes <morgan@ventures.example>",
+      "from_addr": "morgan@ventures.example",
+      "to": "you@yourcompany.example",
+      "cc": "",
+      "subject": "Re: offsite logistics",
+      "date": "Thu, 15 May 2026 13:30:00",
+      "snippet": "Sample snippet for re: offsite logistics.",
+      "cold_check": "warm (prior outbound)",
+      "final_bucket": "2",
+      "final_why": "example routing into Decision needed",
+      "synthesis": "Morgan Reyes \u2014 Re: offsite logistics"
+    },
+    {
+      "id": "x002",
+      "threadId": "t102",
+      "labels": [
+        "INBOX"
+      ],
+      "from": "Priya Nair <priya@studio.example>",
+      "from_addr": "priya@studio.example",
+      "to": "you@yourcompany.example",
+      "cc": "",
+      "subject": "FYI: shared notes",
+      "date": "",
+      "snippet": "Sample snippet for fyi: shared notes.",
+      "cold_check": "warm (prior outbound)",
+      "final_bucket": "3",
+      "final_why": "example routing into FYI / read",
+      "synthesis": "Priya Nair \u2014 FYI: shared notes"
+    },
+    {
+      "id": "x003",
+      "threadId": "t103",
+      "labels": [
+        "INBOX"
+      ],
+      "from": "The Bulletin <digest@thebulletin.example>",
+      "from_addr": "digest@thebulletin.example",
+      "to": "you@yourcompany.example",
+      "cc": "",
+      "subject": "Weekend reads",
+      "date": "Wed, 14 May 2026 09:15:00 +0000",
+      "snippet": "Sample snippet for weekend reads.",
+      "cold_check": "warm (prior outbound)",
+      "final_bucket": "9",
+      "final_why": "example routing into Reading",
+      "synthesis": "The Bulletin \u2014 Weekend reads"
+    },
+    {
+      "id": "x004",
+      "threadId": "t104",
+      "labels": [
+        "INBOX"
+      ],
+      "from": "Promo Bot <deals@marketing.example>",
+      "from_addr": "deals@marketing.example",
+      "to": "you@yourcompany.example",
+      "cc": "",
+      "subject": "Last chance offer",
+      "date": "Tue, 13 May 2026 18:45:00 -0700",
+      "snippet": "Sample snippet for last chance offer.",
+      "cold_check": "warm (prior outbound)",
+      "final_bucket": "7",
+      "final_why": "example routing into Marketing / spam / phishing",
+      "synthesis": "Promo Bot \u2014 Last chance offer"
+    },
+    {
+      "id": "x005",
+      "threadId": "t105",
+      "labels": [
+        "INBOX"
+      ],
+      "from": "Linear <noreply@linear.app>",
+      "from_addr": "noreply@linear.app",
+      "to": "you@yourcompany.example",
+      "cc": "",
+      "subject": "3 issues assigned to you",
+      "date": "Thu, 15 May 2026 12:00:00 +0000",
+      "snippet": "Sample snippet for 3 issues assigned to you.",
+      "cold_check": "warm (prior outbound)",
+      "final_bucket": "8",
+      "final_why": "example routing into In-product notifications",
+      "synthesis": "Linear \u2014 3 issues assigned to you"
+    }
+  ]
+}

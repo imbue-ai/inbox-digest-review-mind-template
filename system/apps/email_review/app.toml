@@ -1,0 +1,6 @@
+name = "email-review"
+display_name = "Inbox Digest"
+icon = "icon.svg"
+instances = false
+priority = "user"
+program = "email-review"
