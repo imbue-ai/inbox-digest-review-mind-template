@@ -18,14 +18,28 @@ version = "v1"
 [recipe]
 include = [".agents/skills/email-digest", "system/apps/email_review", "system/scripts/review_email_moves.py", "system/supervisord.conf", "uv.lock"]
 data_include = []
-# FILL IN: one entry per deliberate exclusion (paths left out, and
-# features stripped from an included path). Leave [] if nothing was.
-exclude = []
-# FILL IN: one entry per published-version modification, stated as a RULE
-# and NEVER the removed value -- the point of a modification is that the
-# value does not ship. e.g. "replace the hardcoded team channel with a
-# neutral default". Leave [] if there were none.
-modification_rules = []
+# The source workspace still carries the predecessor's v1 manifest files at
+# its root. They are deliberately not shipped: this template.md/.toml/.svg
+# trio supersedes them, and a repo holding both formats is ambiguous about
+# which one an adopter should read.
+exclude = [
+    "inspiration-inbox-digest-review.md",
+    "inspiration-inbox-digest-review.svg",
+]
+# This version's modifications, stated as rules. Almost all of them exist
+# because the predecessor was published from a mind on the minds-v0.3.3 base,
+# two versions back, and this version re-cuts it onto minds-v0.5.1.
+modification_rules = [
+    "Relocate the web app from the repo-root libs/ tree to system/apps/, the location a 0.5.1 workspace registers apps from, and give it the app.toml manifest and icon.svg that layout requires.",
+    "Relocate the move-review helper from the repo-root scripts/ tree to system/scripts/.",
+    "Move the app's stored data out of runtime/ and into data/.apps/<app-name>/, the per-app data location the 0.5.1 workspace contract defines, updating every reader and writer of those paths in both the app and the skill.",
+    "Deepen every repo-root path computed by walking up from inside the app package by one level, since system/apps/<pkg>/ sits one directory deeper than the old libs/<pkg>/ did.",
+    "Bind the app to a port that does not collide with the apps a stock 0.5.1 workspace already runs, rather than the predecessor's port.",
+    "Leave the app's root-path environment variable unset: a 0.5.1 workspace registers apps by origin rather than proxying them behind a path prefix, and the page derives its own prefix client-side.",
+    "Rewrite the supervisord program entry in the 0.5.1 form: repo-root working directory, registration through the app manifest rather than a bare name, and the memory-priority tagging wrapper every 0.5.1 program uses.",
+    "Ship the program with autostart off, so that adopting the template does not register a tab that can only render an empty page before a Gmail grant exists; activation turns it on.",
+    "Treat a missing digest data file as the empty digest in both the page and its bucket-fragment endpoint, so a workspace whose classifier has never run renders rather than erroring, and cover both endpoints with tests.",
+]
 
 # Everything an adopter must deal with before this is really theirs.
 # One list -- but each entry's KIND says how it is handled, because the
@@ -41,21 +55,44 @@ modification_rules = []
 #   adaptation = worked through INTERACTIVELY with the user afterwards.
 #   Prose on both sides, so it is not cross-checked.
 #
-# FILL IN, e.g.:
-#   [[requirements.permission]]
-#   scope = "slack-api"
-#   permission = "slack-read-all"
-#
-#   [[requirements.secret]]
-#   name = "SLACK_SIGNING_SECRET"
-#
-#   [requirements.llm]
-#   method = "keyed"   # keyed (an API key, e.g. ANTHROPIC_API_KEY) | keyless (a subscription CLI, e.g. claude -p)
-#
-#   [[requirements.adaptation]]
-#   summary = "the digest channel is hardcoded"
-#   resolution = "ask the user which channel to watch"
+# There is no [[requirements.secret]] entry here on purpose: nothing in this
+# template needs a key or token provisioned. Gmail is reached through the
+# workspace's credential gateway under the two permissions below, and the
+# classifier's LLM steps use the keyless helper.
 [requirements]
+
+[[requirements.permission]]
+scope = "google-gmail-api"
+permission = "google-gmail-read-all"
+
+[[requirements.permission]]
+scope = "google-gmail-api"
+permission = "google-gmail-write-all"
+
+# The classifier's LLM steps shell out to the workspace's built-in keyless
+# helper, so no API key has to be provisioned and there is no requires_secret.
+[requirements.llm]
+method = "keyless"
+
+[[requirements.adaptation]]
+summary = "The account identity ships as a placeholder, so the classifier cannot recognise the adopter's own mail."
+resolution = "Ask the user for their display name, every address they send from, their org domain(s), and their accounts-payable forwarder if they use one, and write those into the app's account module. The classifier uses them to spot its own user, catch impersonation, and route forwarded finance mail."
+
+[[requirements.adaptation]]
+summary = "The who's-who allowlist ships with example rows only, so every sender looks cold and none are protected from auto-unsubscribe."
+resolution = "Do NOT ask the user to type contacts into a file. Once Gmail is connected, run the skill's contact-audit script: it mines their sent mail, auto-keeps everyone they exchange with three or more times, and sends the one-or-two-exchange cases to the LLM judge. Show the proposed list in plain language, then re-run with the write flag. This belongs in activation, before the user's first look -- skip it and the first digest classifies everyone as cold."
+
+[[requirements.adaptation]]
+summary = "The ten-bucket taxonomy and its classification rules encode one person's opinion of how mail should be grouped."
+resolution = "Do not hand the user a rules file. Up front, put the ten groups to them as one plain-language question and make any renames or merges yourself. Then keep tuning on their behalf: the app logs every manual bucket move as labelled data, and the shipped review script mines that log for repeated corrections and proposes rules. Wire it to a daily job that messages the user with numbered yes/no proposals, and change nothing without their confirmation."
+
+[[requirements.adaptation]]
+summary = "There is no way to reply to a message from the app -- it is read-and-triage only."
+resolution = "Left as a gap by the original author, who stripped a third-party mail client out before publishing. A replacement would add a compose box backed by the Gmail drafts endpoints."
+
+[[requirements.adaptation]]
+summary = "Mute applies a Gmail label with a fixed default name, which may collide with a label the adopter already uses."
+resolution = "Ask whether that label name is already in use for something else, and rename it in the app's Gmail-actions module if so."
 
 # What the included code needs INSTALLED. apt takes bare names: versions
 # are a function of the apt snapshot timestamp, so replaying names at the
@@ -63,18 +100,13 @@ modification_rules = []
 # environment. The other sources are not snapshot-pinned, so for them the
 # recorded version IS the pin (name = version).
 #
-# FILL IN from what the included code actually needs, e.g.:
-#   apt = ["poppler-utils"]
-#   [environment.npm_global]
-#   "@slack/cli" = "2.1.0"
-#   [environment.uv_tools]
-#   yt-dlp = "2026.7.1"
-#   [environment.cargo_crates]
-#   fd-find = "9.0.0"
-#
-# For an install with no package database (a URL-fetched binary, a browser),
-# ship a system/scripts/env.d/<NNNN>-<slug>-<name>.sh unit with NNNN >= 2000,
-# include it in the recipe above, and list it in env_d_units.
+# Nothing to install. This template needs no packages beyond a stock
+# workspace: the app's own dependencies (fastapi, uvicorn, jinja2, nh3) are
+# ordinary python requirements declared in its pyproject.toml and resolved by
+# the workspace's normal sync, the skill's scripts are standard library plus
+# the workspace's own latchkey and LLM helpers, and every Gmail call goes out
+# over HTTP rather than through a client library. Both lists are deliberately
+# empty, not unfilled.
 [environment]
 apt = []
 env_d_units = []
